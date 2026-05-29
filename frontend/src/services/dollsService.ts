@@ -66,6 +66,12 @@ export async function getDolls(query: DollsQuery = {}): Promise<PaginatedDolls> 
   };
 }
 
+export async function getDollBySlug(slug: string): Promise<Doll> {
+  const response = await apiFetch<ApiDoll>(`/dolls/${slug}`);
+
+  return normalizeDoll(response);
+}
+
 function buildQueryParams(query: DollsQuery) {
   const params = new URLSearchParams();
 

@@ -5,7 +5,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const slides = [
   {
-    image: 'https://images.unsplash.com/photo-1544329241-118817478051?auto=format&fit=crop&q=80&w=2000',
+    image: '/images/home/hero/banner1.png',
     title: 'MUÑECAS CON ESTILO, DETALLE Y PERSONALIDAD',
     subtitle: 'Descubre piezas únicas para regalar, coleccionar y enamorar.',
     buttonText: 'Ver catálogo',
@@ -13,7 +13,7 @@ const slides = [
     overlay: 'bg-black/30'
   },
   {
-    image: 'https://images.unsplash.com/photo-1588636733221-da3b7b250de8?auto=format&fit=crop&q=80&w=2000',
+    image: '/images/home/hero/banner2.png',
     title: 'CON LA MAYOR ATENCIÓN AL DETALLE',
     subtitle: 'Diseños especiales pensados para contar historias únicas.',
     buttonText: 'Descubre',
@@ -21,7 +21,7 @@ const slides = [
     overlay: 'bg-black/40' // slightly darker to make white text pop
   },
   {
-    image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&q=80&w=2000',
+    image: '/images/home/hero/banner3.png',
     title: 'REGALOS QUE GUARDAN RECUERDOS',
     subtitle: 'Muñecas delicadas, elegantes y llenas de significado.',
     buttonText: 'Explorar colección',

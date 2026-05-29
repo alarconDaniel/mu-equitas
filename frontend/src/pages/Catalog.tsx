@@ -48,13 +48,14 @@ function normalizeInitialCategory(category: string | null) {
 }
 
 export default function Catalog() {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const categoryParam = searchParams.get('category') ?? searchParams.get('categoria');
+  const searchParam = searchParams.get('search') ?? '';
   const [activeCategory, setActiveCategory] = useState<string>(() =>
     normalizeInitialCategory(categoryParam),
   );
   const [sortOption, setSortOption] = useState<keyof typeof sortOptions>('novedad');
-  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [searchQuery, setSearchQuery] = useState<string>(() => searchParam);
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
   const [filteredDolls, setFilteredDolls] = useState<Doll[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -63,6 +64,24 @@ export default function Catalog() {
   useEffect(() => {
     setActiveCategory(normalizeInitialCategory(categoryParam));
   }, [categoryParam]);
+
+  useEffect(() => {
+    setSearchQuery(searchParam);
+  }, [searchParam]);
+
+  const updateSearchQuery = (value: string) => {
+    setSearchQuery(value);
+
+    const nextParams = new URLSearchParams(searchParams);
+
+    if (value.trim()) {
+      nextParams.set('search', value);
+    } else {
+      nextParams.delete('search');
+    }
+
+    setSearchParams(nextParams, { replace: true });
+  };
 
   useEffect(() => {
     let isMounted = true;
@@ -112,7 +131,7 @@ export default function Catalog() {
             type="text"
             placeholder="Buscar por nombre, colección o descripción..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e) => updateSearchQuery(e.target.value)}
             className="w-full border-b border-black py-3 pl-3 pr-10 focus:outline-none bg-transparent placeholder-neutral-400 text-sm"
           />
         </div>
@@ -197,6 +216,7 @@ export default function Catalog() {
                 setActiveCategory('all');
                 setSortOption('novedad');
                 setSearchQuery('');
+                setSearchParams({}, { replace: true });
               }}
               className="text-xs uppercase tracking-widest text-neutral-400 hover:text-black border-b border-transparent hover:border-black transition-colors mt-8"
             >
@@ -226,7 +246,7 @@ export default function Catalog() {
               <div className="col-span-full py-20 text-center text-neutral-500">
                 <p className="text-lg">No encontramos resultados para tu búsqueda.</p>
                 <button
-                  onClick={() => setSearchQuery('')}
+                  onClick={() => updateSearchQuery('')}
                   className="mt-4 text-black underline underline-offset-4"
                 >
                   Ver todos los productos

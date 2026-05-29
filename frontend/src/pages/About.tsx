@@ -8,7 +8,7 @@ export default function About() {
         {/* Image Side */}
         <div className="relative h-[600px] lg:h-[800px] w-full">
           <img 
-            src="https://images.unsplash.com/photo-1515347619362-d278065b7074?auto=format&fit=crop&q=80&w=1200" 
+            src="images/about/about-us-left.png" 
             alt="Nosotros" 
             className="w-full h-full object-cover grayscale-[20%]"
           />

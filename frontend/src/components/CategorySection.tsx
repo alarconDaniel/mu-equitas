@@ -6,37 +6,37 @@ const categories = [
     name: 'Colección Premium',
     slug: 'coleccion-premium',
     image:
-      'https://images.unsplash.com/photo-1445205170230-053b83016050?auto=format&fit=crop&q=80&w=600',
+      '/images/categories/premium.png',
   },
   {
     name: 'Muñecas Clásicas',
     slug: 'munecas-clasicas',
     image:
-      'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&q=80&w=600',
+      '/images/categories/clasicas.png',
   },
   {
     name: 'Edición Regalo',
     slug: 'edicion-regalo',
     image:
-      'https://images.unsplash.com/photo-1558769132-cb1aea458c5e?auto=format&fit=crop&q=80&w=600',
+      '/images/categories/regalo.png',
   },
   {
     name: 'Muñecas Al Detalle',
     slug: 'munecas-personalizadas',
     image:
-      'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&q=80&w=600',
+      '/images/categories/detalle.png',
   },
   {
     name: 'Mini Muñecas',
     slug: 'mini-munecas',
     image:
-      'https://images.unsplash.com/photo-1621509930438-6decd716260a?auto=format&fit=crop&q=80&w=600',
+      '/images/categories/mini.png',
   },
   {
     name: 'Accesorios',
     slug: 'accesorios',
     image:
-      'https://images.unsplash.com/photo-1583394838336-acd977736f90?auto=format&fit=crop&q=80&w=600',
+      '/images/categories/accesorios.png',
   },
 ];
 

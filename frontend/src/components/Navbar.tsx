@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Search, User, Heart, ShoppingBag, Menu, X } from 'lucide-react';
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -16,6 +18,20 @@ export default function Navbar() {
   }, []);
 
   const closeMenu = () => setMobileMenuOpen(false);
+
+  const handleSearchSubmit = (event?: React.FormEvent<HTMLFormElement>) => {
+    event?.preventDefault();
+
+    const trimmedSearch = searchQuery.trim();
+    const params = new URLSearchParams();
+
+    if (trimmedSearch) {
+      params.set('search', trimmedSearch);
+    }
+
+    closeMenu();
+    navigate(params.toString() ? `/catalogo?${params.toString()}` : '/catalogo');
+  };
 
   const navLinks = [
     { name: 'Inicio', path: '/' },
@@ -66,16 +82,30 @@ export default function Navbar() {
           {/* Icons (Right) */}
           <div className="flex items-center justify-end space-x-5 flex-1">
             {/* Desktop Search */}
-            <div className="hidden xl:flex items-center border-b border-neutral-300 pb-1 w-48 mr-4 group">
+            <form
+              onSubmit={handleSearchSubmit}
+              className="hidden xl:flex items-center border-b border-neutral-300 pb-1 w-48 mr-4 group"
+            >
               <input 
                 type="text" 
                 placeholder="¿Qué estás buscando?" 
+                value={searchQuery}
+                onChange={(event) => setSearchQuery(event.target.value)}
                 className="bg-transparent border-none focus:outline-none w-full text-sm text-neutral-900 placeholder-neutral-400"
               />
-              <Search size={18} className="text-neutral-500 group-hover:text-black transition-colors" strokeWidth={1.5} />
-            </div>
+              <button
+                type="submit"
+                aria-label="Buscar"
+                className="text-neutral-500 group-hover:text-black transition-colors"
+              >
+                <Search size={18} strokeWidth={1.5} />
+              </button>
+            </form>
 
-            <button className="xl:hidden text-neutral-900 hover:text-neutral-500 transition-colors">
+            <button
+              onClick={() => handleSearchSubmit()}
+              className="xl:hidden text-neutral-900 hover:text-neutral-500 transition-colors"
+            >
               <Search size={22} strokeWidth={1.5} />
             </button>
             <button className="hidden sm:block text-neutral-900 hover:text-neutral-500 transition-colors">
@@ -112,14 +142,18 @@ export default function Navbar() {
             
             {/* Mobile Search */}
             <div className="px-5 py-6">
-              <div className="flex items-center border-b border-neutral-300 pb-2">
-                <Search size={18} className="text-neutral-400 mr-2" strokeWidth={1.5}/>
+              <form onSubmit={handleSearchSubmit} className="flex items-center border-b border-neutral-300 pb-2">
+                <button type="submit" aria-label="Buscar" className="text-neutral-400 mr-2">
+                  <Search size={18} strokeWidth={1.5}/>
+                </button>
                 <input 
                   type="text" 
                   placeholder="¿Buscar..." 
+                  value={searchQuery}
+                  onChange={(event) => setSearchQuery(event.target.value)}
                   className="bg-transparent border-none focus:outline-none w-full text-sm text-neutral-900"
                 />
-              </div>
+              </form>
             </div>
 
             <div className="px-5 flex flex-col space-y-6">

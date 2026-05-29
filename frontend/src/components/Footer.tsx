@@ -39,9 +39,9 @@ export default function Footer() {
           <div>
             <h4 className="text-xs tracking-[0.2em] uppercase font-semibold mb-6 text-stone-200">Redes sociales</h4>
             <ul className="space-y-4">
-              <li><a href="#" className="text-sm text-stone-400 hover:text-white transition-colors">Instagram</a></li>
-              <li><a href="#" className="text-sm text-stone-400 hover:text-white transition-colors">Pinterest</a></li>
-              <li><a href="#" className="text-sm text-stone-400 hover:text-white transition-colors">TikTok</a></li>
+              <li><a   href="https://www.instagram.com/__mateocasas?igsh=cHUzcDFwcHU3MWVw" className="text-sm text-stone-400 hover:text-white transition-colors">Instagram</a></li>
+              <li><a   href="https://www.tiktok.com/@upminaa.cos?_r=1&_t=ZS-96kzLspntlX" className="text-sm text-stone-400 hover:text-white transition-colors">Pinterest</a></li>
+              <li><a   href="https://pin.it/55qBM5iaU" className="text-sm text-stone-400 hover:text-white transition-colors">TikTok</a></li>
             </ul>
           </div>
 

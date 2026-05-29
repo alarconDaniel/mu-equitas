@@ -55,7 +55,7 @@ export default function FeaturedProducts() {
   }, []);
 
   const getStepSize = () => {
-    const cardWidth = firstCardRef.current?.offsetWidth ?? 260;
+    const cardWidth = firstCardRef.current?.offsetWidth ?? 300;
 
     const gap = trackRef.current
       ? parseFloat(window.getComputedStyle(trackRef.current).gap || '0')
@@ -85,7 +85,12 @@ export default function FeaturedProducts() {
     setIsAnimating(true);
 
     setFeatured((current) => {
+      if (current.length <= 1) return current;
+
       const lastItem = current[current.length - 1];
+
+      if (!lastItem) return current;
+
       return [lastItem, ...current.slice(0, -1)];
     });
 
@@ -106,7 +111,12 @@ export default function FeaturedProducts() {
       setTransitionEnabled(false);
 
       setFeatured((current) => {
+        if (current.length <= 1) return current;
+
         const [firstItem, ...rest] = current;
+
+        if (!firstItem) return current;
+
         return [...rest, firstItem];
       });
 
@@ -128,63 +138,66 @@ export default function FeaturedProducts() {
   };
 
   return (
-    <section className="py-14 md:py-20 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 overflow-x-clip">
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 mb-8 md:mb-10 border-b border-neutral-200 pb-4">
-        <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold tracking-[0.18em] sm:tracking-widest uppercase leading-snug">
-          Favoritos de nuestros clientes
-        </h2>
+    <section className="w-full max-w-full overflow-hidden py-14 md:py-20">
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 overflow-hidden">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 mb-8 md:mb-10 border-b border-neutral-200 pb-4">
+          <h2 className="max-w-[290px] sm:max-w-none text-[18px] sm:text-2xl md:text-3xl font-semibold tracking-[0.18em] sm:tracking-widest uppercase leading-snug">
+            <span className="block sm:inline">Favoritos de nuestros</span>
+            <span className="block sm:inline sm:ml-2">clientes</span>
+          </h2>
 
-        <div className="flex gap-2 self-end sm:self-auto">
-          <button
-            onClick={scrollLeft}
-            disabled={isAnimating}
-            aria-label="Producto anterior"
-            className="p-2 border border-neutral-300 rounded-full text-neutral-600 hover:text-black hover:border-black transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-          >
-            <ChevronLeft size={20} strokeWidth={1.5} />
-          </button>
+          <div className="flex gap-2 self-start sm:self-auto">
+            <button
+              onClick={scrollLeft}
+              disabled={isAnimating}
+              aria-label="Producto anterior"
+              className="p-2 border border-neutral-300 rounded-full text-neutral-600 hover:text-black hover:border-black transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              <ChevronLeft size={20} strokeWidth={1.5} />
+            </button>
 
-          <button
-            onClick={scrollRight}
-            disabled={isAnimating}
-            aria-label="Producto siguiente"
-            className="p-2 border border-neutral-300 rounded-full text-neutral-600 hover:text-black hover:border-black transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-          >
-            <ChevronRight size={20} strokeWidth={1.5} />
-          </button>
-        </div>
-      </div>
-
-      {isLoading ? (
-        <p className="py-16 text-sm text-neutral-500">Cargando favoritos...</p>
-      ) : error ? (
-        <p className="py-16 text-sm text-neutral-500">{error}</p>
-      ) : (
-        <div className="w-full overflow-hidden pb-8">
-          <div
-            ref={trackRef}
-            onTransitionEnd={handleTransitionEnd}
-            className="flex gap-4 md:gap-6"
-            style={{
-              transform: `translate3d(${translateX}px, 0, 0)`,
-              transition: transitionEnabled
-                ? 'transform 520ms cubic-bezier(0.22, 1, 0.36, 1)'
-                : 'none',
-              willChange: 'transform',
-            }}
-          >
-            {featured.map((doll, index) => (
-              <div
-                key={doll.id}
-                ref={index === 0 ? firstCardRef : null}
-                className="shrink-0 w-[72vw] min-w-[220px] max-w-[280px] sm:w-[280px] sm:max-w-none md:w-[320px]"
-              >
-                <ProductCard product={doll} />
-              </div>
-            ))}
+            <button
+              onClick={scrollRight}
+              disabled={isAnimating}
+              aria-label="Producto siguiente"
+              className="p-2 border border-neutral-300 rounded-full text-neutral-600 hover:text-black hover:border-black transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              <ChevronRight size={20} strokeWidth={1.5} />
+            </button>
           </div>
         </div>
-      )}
+
+        {isLoading ? (
+          <p className="py-16 text-sm text-neutral-500">Cargando favoritos...</p>
+        ) : error ? (
+          <p className="py-16 text-sm text-neutral-500">{error}</p>
+        ) : (
+          <div className="w-full max-w-full overflow-hidden pb-8">
+            <div
+              ref={trackRef}
+              onTransitionEnd={handleTransitionEnd}
+              className="flex gap-4 md:gap-6"
+              style={{
+                transform: `translate3d(${translateX}px, 0, 0)`,
+                transition: transitionEnabled
+                  ? 'transform 520ms cubic-bezier(0.22, 1, 0.36, 1)'
+                  : 'none',
+                willChange: 'transform',
+              }}
+            >
+              {featured.map((doll, index) => (
+                <div
+                  key={doll.id}
+                  ref={index === 0 ? firstCardRef : null}
+                  className="shrink-0 w-[calc(100vw-2rem)] sm:w-[280px] md:w-[320px] max-w-full"
+                >
+                  <ProductCard product={doll} />
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
     </section>
   );
 }

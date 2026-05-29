@@ -27,6 +27,14 @@ const slides = [
     buttonText: 'Explorar colección',
     link: '/catalogo',
     overlay: 'bg-black/30'
+  },
+  {
+    image: '/images/home/hero/banner4.png',
+    title: 'ARCILLA PERSONALIZADA QUE COBRA VIDA',
+    subtitle: 'Muñecos de arcilla con el más puro y especifico detalle.',
+    buttonText: 'Explorar colección',
+    link: '/catalogo',
+    overlay: 'bg-black/30'
   }
 ];
 

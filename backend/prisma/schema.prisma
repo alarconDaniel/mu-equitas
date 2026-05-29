@@ -1,0 +1,69 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Doll {
+  id           String     @id @default(cuid())
+  name         String     @db.VarChar(120)
+  slug         String     @unique @db.VarChar(140)
+  description  String     @db.VarChar(500)
+  price        Int
+  imageUrl     String     @db.VarChar(500)
+  tag          String?    @db.VarChar(80)
+  available    Boolean    @default(true)
+  popularity   Int        @default(0)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  categoryId   String
+  collectionId String
+  category     Category   @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  collection   Collection @relation(fields: [collectionId], references: [id], onDelete: Restrict)
+
+  @@index([categoryId])
+  @@index([collectionId])
+  @@index([available])
+  @@index([price])
+  @@index([popularity])
+}
+
+model Category {
+  id          String   @id @default(cuid())
+  name        String   @db.VarChar(100)
+  slug        String   @unique @db.VarChar(120)
+  description String   @db.VarChar(300)
+  imageUrl    String   @db.VarChar(500)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  dolls       Doll[]
+}
+
+model Collection {
+  id          String   @id @default(cuid())
+  name        String   @db.VarChar(100)
+  slug        String   @unique @db.VarChar(120)
+  description String   @db.VarChar(300)
+  imageUrl    String   @db.VarChar(500)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  dolls       Doll[]
+}
+
+model NewsletterSubscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique @db.VarChar(180)
+  createdAt DateTime @default(now())
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String   @db.VarChar(120)
+  email     String   @db.VarChar(180)
+  subject   String   @db.VarChar(160)
+  message   String   @db.VarChar(1000)
+  createdAt DateTime @default(now())
+}

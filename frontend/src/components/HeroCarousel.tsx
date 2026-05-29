@@ -5,6 +5,14 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const slides = [
   {
+    image: '/images/home/hero/banner4.png',
+    title: 'ARCILLA PERSONALIZADA QUE COBRA VIDA',
+    subtitle: 'Muñecos de arcilla con el más puro y especifico detalle.',
+    buttonText: 'Explorar colección',
+    link: '/catalogo',
+    overlay: 'bg-black/30'
+  },
+  {
     image: '/images/home/hero/banner1.png',
     title: 'MUÑECAS CON ESTILO, DETALLE Y PERSONALIDAD',
     subtitle: 'Descubre piezas únicas para regalar, coleccionar y enamorar.',
@@ -24,14 +32,6 @@ const slides = [
     image: '/images/home/hero/banner3.png',
     title: 'REGALOS QUE GUARDAN RECUERDOS',
     subtitle: 'Muñecas delicadas, elegantes y llenas de significado.',
-    buttonText: 'Explorar colección',
-    link: '/catalogo',
-    overlay: 'bg-black/30'
-  },
-  {
-    image: '/images/home/hero/banner4.png',
-    title: 'ARCILLA PERSONALIZADA QUE COBRA VIDA',
-    subtitle: 'Muñecos de arcilla con el más puro y especifico detalle.',
     buttonText: 'Explorar colección',
     link: '/catalogo',
     overlay: 'bg-black/30'
@@ -63,17 +63,17 @@ export default function HeroCarousel() {
           className="absolute inset-0"
         >
           {/* Background Image */}
-          <div 
+          <div
             className="absolute inset-0 bg-cover bg-center"
             style={{ backgroundImage: `url(${slides[current].image})` }}
           />
-          
+
           {/* Dark Overlay for contrast */}
           <div className={`absolute inset-0 ${slides[current].overlay}`} />
 
           {/* Text Content */}
           <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
-            <motion.h2 
+            <motion.h2
               initial={{ y: 30, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.3, duration: 0.8, ease: "easeOut" }}
@@ -81,7 +81,7 @@ export default function HeroCarousel() {
             >
               {slides[current].title}
             </motion.h2>
-            <motion.p 
+            <motion.p
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.6, duration: 0.8, ease: "easeOut" }}
@@ -95,7 +95,7 @@ export default function HeroCarousel() {
               transition={{ delay: 0.9, duration: 0.8, ease: "easeOut" }}
               className="mt-10"
             >
-              <Link 
+              <Link
                 to={slides[current].link}
                 className="bg-white text-black px-8 py-4 text-xs md:text-sm font-semibold tracking-widest uppercase hover:bg-black hover:text-white transition-colors duration-300"
               >
@@ -107,13 +107,13 @@ export default function HeroCarousel() {
       </AnimatePresence>
 
       {/* Controls */}
-      <button 
+      <button
         onClick={prevSlide}
         className="absolute left-4 top-1/2 -translate-y-1/2 p-3 text-white/50 hover:text-white hover:bg-black/20 rounded-full transition-all z-20"
       >
         <ChevronLeft size={32} strokeWidth={1} />
       </button>
-      <button 
+      <button
         onClick={nextSlide}
         className="absolute right-4 top-1/2 -translate-y-1/2 p-3 text-white/50 hover:text-white hover:bg-black/20 rounded-full transition-all z-20"
       >
@@ -126,9 +126,8 @@ export default function HeroCarousel() {
           <button
             key={idx}
             onClick={() => setCurrent(idx)}
-            className={`h-1 transition-all duration-500 ease-out ${
-              current === idx ? 'w-10 bg-white' : 'w-4 bg-white/40 hover:bg-white/70'
-            }`}
+            className={`h-1 transition-all duration-500 ease-out ${current === idx ? 'w-10 bg-white' : 'w-4 bg-white/40 hover:bg-white/70'
+              }`}
           />
         ))}
       </div>

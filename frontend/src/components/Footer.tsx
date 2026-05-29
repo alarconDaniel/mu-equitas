@@ -23,6 +23,7 @@ export default function Footer() {
               <li><Link to="/" className="text-sm text-stone-400 hover:text-white transition-colors">Inicio</Link></li>
               <li><Link to="/catalogo" className="text-sm text-stone-400 hover:text-white transition-colors">Catálogo</Link></li>
               <li><Link to="/nosotros" className="text-sm text-stone-400 hover:text-white transition-colors">Acerca de nosotros</Link></li>
+              <li><Link to="/contactanos" className="text-sm text-stone-400 hover:text-white transition-colors">Contáctanos</Link></li>
             </ul>
           </div>
 
@@ -31,7 +32,7 @@ export default function Footer() {
             <ul className="space-y-4">
               <li><Link to="#" className="text-sm text-stone-400 hover:text-white transition-colors">Envíos y devoluciones</Link></li>
               <li><Link to="#" className="text-sm text-stone-400 hover:text-white transition-colors">Cuidado de productos</Link></li>
-              <li><Link to="#" className="text-sm text-stone-400 hover:text-white transition-colors">Contacto</Link></li>
+              <li><Link to="/contactanos" className="text-sm text-stone-400 hover:text-white transition-colors">Contacto</Link></li>
               <li><Link to="#" className="text-sm text-stone-400 hover:text-white transition-colors">Preguntas frecuentes</Link></li>
             </ul>
           </div>

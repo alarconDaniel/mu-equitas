@@ -37,6 +37,7 @@ export default function Navbar() {
     { name: 'Inicio', path: '/' },
     { name: 'Catálogo', path: '/catalogo' },
     { name: 'Nosotros', path: '/nosotros' },
+    { name: 'Contáctanos', path: '/contactanos' },
   ];
 
   return (
@@ -75,7 +76,7 @@ export default function Navbar() {
           {/* Logo (Center) */}
           <div className="flex-1 flex justify-center items-center">
             <Link to="/" className="text-2xl md:text-3xl font-serif tracking-widest text-black font-semibold">
-              MUÑEQUITAS
+              BELLORO
             </Link>
           </div>
 

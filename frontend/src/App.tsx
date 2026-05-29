@@ -7,6 +7,7 @@ import Newsletter from './components/Newsletter';
 import Home from './pages/Home';
 import Catalog from './pages/Catalog';
 import About from './pages/About';
+import ContactPage from './pages/ContactPage';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -31,6 +32,7 @@ export default function App() {
             <Route path="/" element={<Home />} />
             <Route path="/catalogo" element={<Catalog />} />
             <Route path="/nosotros" element={<About />} />
+            <Route path="/contactanos" element={<ContactPage />} />
           </Routes>
         </main>
 

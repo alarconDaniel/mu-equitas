@@ -11,6 +11,7 @@ const categories = [
   { label: 'Muñecas Clásicas', value: 'munecas-clasicas' },
   { label: 'Edición Regalo', value: 'edicion-regalo' },
   { label: 'Muñecas Al Detalle', value: 'munecas-personalizadas' },
+  { label: 'Arcilla', value: 'arcilla' },
   { label: 'Mini Muñecas', value: 'mini-munecas' },
   { label: 'Accesorios', value: 'accesorios' },
 ];

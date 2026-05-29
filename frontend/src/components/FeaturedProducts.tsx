@@ -55,10 +55,11 @@ export default function FeaturedProducts() {
   }, []);
 
   const getStepSize = () => {
-    const cardWidth = firstCardRef.current?.offsetWidth ?? 320;
+    const cardWidth = firstCardRef.current?.offsetWidth ?? 260;
+
     const gap = trackRef.current
       ? parseFloat(window.getComputedStyle(trackRef.current).gap || '0')
-      : 24;
+      : 16;
 
     return cardWidth + gap;
   };
@@ -127,16 +128,17 @@ export default function FeaturedProducts() {
   };
 
   return (
-    <section className="py-20 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="flex justify-between items-end mb-10 border-b border-neutral-200 pb-4">
-        <h2 className="text-2xl md:text-3xl font-semibold tracking-widest uppercase">
+    <section className="py-14 md:py-20 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 overflow-x-clip">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 mb-8 md:mb-10 border-b border-neutral-200 pb-4">
+        <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold tracking-[0.18em] sm:tracking-widest uppercase leading-snug">
           Favoritos de nuestros clientes
         </h2>
 
-        <div className="flex gap-2">
+        <div className="flex gap-2 self-end sm:self-auto">
           <button
             onClick={scrollLeft}
             disabled={isAnimating}
+            aria-label="Producto anterior"
             className="p-2 border border-neutral-300 rounded-full text-neutral-600 hover:text-black hover:border-black transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
           >
             <ChevronLeft size={20} strokeWidth={1.5} />
@@ -145,6 +147,7 @@ export default function FeaturedProducts() {
           <button
             onClick={scrollRight}
             disabled={isAnimating}
+            aria-label="Producto siguiente"
             className="p-2 border border-neutral-300 rounded-full text-neutral-600 hover:text-black hover:border-black transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
           >
             <ChevronRight size={20} strokeWidth={1.5} />
@@ -157,7 +160,7 @@ export default function FeaturedProducts() {
       ) : error ? (
         <p className="py-16 text-sm text-neutral-500">{error}</p>
       ) : (
-        <div className="overflow-hidden pb-8">
+        <div className="w-full overflow-hidden pb-8">
           <div
             ref={trackRef}
             onTransitionEnd={handleTransitionEnd}
@@ -174,7 +177,7 @@ export default function FeaturedProducts() {
               <div
                 key={doll.id}
                 ref={index === 0 ? firstCardRef : null}
-                className="min-w-[280px] w-[280px] md:min-w-[320px] md:w-[320px] shrink-0"
+                className="shrink-0 w-[72vw] min-w-[220px] max-w-[280px] sm:w-[280px] sm:max-w-none md:w-[320px]"
               >
                 <ProductCard product={doll} />
               </div>

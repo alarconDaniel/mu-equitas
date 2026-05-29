@@ -105,15 +105,21 @@ export default function FeaturedProducts() {
       setTransitionEnabled(false);
 
       setFeatured((current) => {
-        const firstItem = current[0];
-        return [...current.slice(1), firstItem];
+        const [firstItem, ...rest] = current;
+        return [...rest, firstItem];
       });
 
       setTranslateX(0);
 
       requestAnimationFrame(() => {
-        setTransitionEnabled(true);
+        requestAnimationFrame(() => {
+          setTransitionEnabled(true);
+          setIsAnimating(false);
+          setDirection(null);
+        });
       });
+
+      return;
     }
 
     setIsAnimating(false);
@@ -161,6 +167,7 @@ export default function FeaturedProducts() {
               transition: transitionEnabled
                 ? 'transform 520ms cubic-bezier(0.22, 1, 0.36, 1)'
                 : 'none',
+              willChange: 'transform',
             }}
           >
             {featured.map((doll, index) => (

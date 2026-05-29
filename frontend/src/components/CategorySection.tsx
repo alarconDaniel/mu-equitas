@@ -2,12 +2,42 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const categories = [
-  { name: 'Muñecas Clásicas', image: 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&q=80&w=600' },
-  { name: 'Personalizadas', image: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&q=80&w=600' },
-  { name: 'Edición Regalo', image: 'https://images.unsplash.com/photo-1558769132-cb1aea458c5e?auto=format&fit=crop&q=80&w=600' },
-  { name: 'Colección Premium', image: 'https://images.unsplash.com/photo-1445205170230-053b83016050?auto=format&fit=crop&q=80&w=600' },
-  { name: 'Accesorios', image: 'https://images.unsplash.com/photo-1583394838336-acd977736f90?auto=format&fit=crop&q=80&w=600' },
-  { name: 'Mini Muñecas', image: 'https://images.unsplash.com/photo-1621509930438-6decd716260a?auto=format&fit=crop&q=80&w=600' },
+  {
+    name: 'Colección Premium',
+    slug: 'coleccion-premium',
+    image:
+      'https://images.unsplash.com/photo-1445205170230-053b83016050?auto=format&fit=crop&q=80&w=600',
+  },
+  {
+    name: 'Muñecas Clásicas',
+    slug: 'munecas-clasicas',
+    image:
+      'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&q=80&w=600',
+  },
+  {
+    name: 'Edición Regalo',
+    slug: 'edicion-regalo',
+    image:
+      'https://images.unsplash.com/photo-1558769132-cb1aea458c5e?auto=format&fit=crop&q=80&w=600',
+  },
+  {
+    name: 'Muñecas Al Detalle',
+    slug: 'munecas-personalizadas',
+    image:
+      'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&q=80&w=600',
+  },
+  {
+    name: 'Mini Muñecas',
+    slug: 'mini-munecas',
+    image:
+      'https://images.unsplash.com/photo-1621509930438-6decd716260a?auto=format&fit=crop&q=80&w=600',
+  },
+  {
+    name: 'Accesorios',
+    slug: 'accesorios',
+    image:
+      'https://images.unsplash.com/photo-1583394838336-acd977736f90?auto=format&fit=crop&q=80&w=600',
+  },
 ];
 
 export default function CategorySection() {
@@ -19,15 +49,14 @@ export default function CategorySection() {
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-6 gap-4 md:gap-6">
-        {categories.map((cat, idx) => (
-          <Link to={`/catalogo?categoria=${cat.name}`} key={idx} className="group cursor-pointer flex flex-col items-center">
+        {categories.map((cat) => (
+          <Link to={`/catalogo?category=${cat.slug}`} key={cat.slug} className="group cursor-pointer flex flex-col items-center">
             <div className="w-full aspect-[4/5] relative overflow-hidden bg-stone-100 mb-4 rounded-sm">
-              <img 
-                src={cat.image} 
-                alt={cat.name} 
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" 
+              <img
+                src={cat.image}
+                alt={cat.name}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
               />
-              {/* Subtle gradient overlay to ensure text readability if we wanted text inside, but we'll put it outside to match the clean vibe */}
             </div>
             <span className="text-sm font-medium tracking-wide uppercase text-neutral-900 group-hover:underline underline-offset-4 decoration-neutral-300 text-center">
               {cat.name}

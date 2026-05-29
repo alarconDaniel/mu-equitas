@@ -1,9 +1,4 @@
-const DEFAULT_API_URL = 'http://localhost:3001/api';
-
-export const API_URL = (import.meta.env.VITE_API_URL || DEFAULT_API_URL).replace(
-  /\/$/,
-  '',
-);
+export const API_URL = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
 
 export class ApiError extends Error {
   constructor(
@@ -16,6 +11,10 @@ export class ApiError extends Error {
 }
 
 export async function apiFetch<T>(path: string, options: RequestInit = {}): Promise<T> {
+  if (!API_URL) {
+    throw new ApiError('VITE_API_URL is required for API requests.', 0);
+  }
+
   const response = await fetch(`${API_URL}${path}`, {
     ...options,
     headers: {

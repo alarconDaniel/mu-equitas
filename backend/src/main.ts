@@ -10,12 +10,23 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
   const port = configService.get<number>('port', 3001);
+  const apiPrefix = configService.get<string>('apiPrefix', 'api');
+  const corsOrigins = configService.get<string[]>('corsOrigins', []);
+  const swaggerEnabled = configService.get<boolean>('swaggerEnabled', true);
 
-  app.setGlobalPrefix('api');
+  app.setGlobalPrefix(apiPrefix);
   app.enableCors({
-    origin: configService.get<string>('corsOrigin', 'http://localhost:3000'),
+    origin: (origin, callback) => {
+      if (!origin || corsOrigins.includes(origin)) {
+        callback(null, true);
+        return;
+      }
+
+      callback(new Error('Origin not allowed by CORS'), false);
+    },
     credentials: true,
   });
+
   app.useGlobalFilters(new PrismaExceptionFilter());
   app.useGlobalPipes(
     new SanitizeInputPipe(),
@@ -27,16 +38,20 @@ async function bootstrap() {
     }),
   );
 
-  const swaggerConfig = new DocumentBuilder()
-    .setTitle('Muñequitas API')
-    .setDescription('API REST para catalogo, categorias, colecciones, newsletter y contacto.')
-    .setVersion('1.0')
-    .build();
+  if (swaggerEnabled) {
+    const swaggerConfig = new DocumentBuilder()
+      .setTitle('Munequitas API')
+      .setDescription(
+        'API REST para catalogo, categorias, colecciones, combos, newsletter y contacto.',
+      )
+      .setVersion('1.0')
+      .build();
 
-  const document = SwaggerModule.createDocument(app, swaggerConfig);
-  SwaggerModule.setup('api/docs', app, document);
+    const document = SwaggerModule.createDocument(app, swaggerConfig);
+    SwaggerModule.setup(`${apiPrefix}/docs`, app, document);
+  }
 
-  await app.listen(port);
+  await app.listen(port, '0.0.0.0');
 }
 
 void bootstrap();

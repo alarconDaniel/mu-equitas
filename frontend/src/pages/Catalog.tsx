@@ -2,16 +2,30 @@ import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { SlidersHorizontal } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
-import { dolls as mockDolls, type Doll } from '../data/dolls';
+import type { Doll } from '../data/dolls';
 import { getDolls } from '../services/dollsService';
 
 const categories = [
-  'Todas',
-  'Muñecas Clásicas',
-  'Muñecas Personalizadas',
-  'Edición Regalo',
-  'Colección Premium',
+  { label: 'Todas', value: 'all' },
+  { label: 'Colección Premium', value: 'coleccion-premium' },
+  { label: 'Muñecas Clásicas', value: 'munecas-clasicas' },
+  { label: 'Edición Regalo', value: 'edicion-regalo' },
+  { label: 'Muñecas Al Detalle', value: 'munecas-personalizadas' },
+  { label: 'Mini Muñecas', value: 'mini-munecas' },
+  { label: 'Accesorios', value: 'accesorios' },
 ];
+
+const categoryValues = new Set(categories.map((category) => category.value));
+const categoryAliases: Record<string, string> = {
+  'Colección Premium': 'coleccion-premium',
+  'Muñecas Clásicas': 'munecas-clasicas',
+  'Edición Regalo': 'edicion-regalo',
+  'Muñecas Al Detalle': 'munecas-personalizadas',
+  'Muñecas Personalizadas': 'munecas-personalizadas',
+  Personalizadas: 'munecas-personalizadas',
+  'Mini Muñecas': 'mini-munecas',
+  Accesorios: 'accesorios',
+};
 
 const sortOptions = {
   novedad: { sortBy: 'createdAt', order: 'desc' },
@@ -21,31 +35,44 @@ const sortOptions = {
 
 function normalizeInitialCategory(category: string | null) {
   if (!category) {
-    return 'Todas';
+    return 'all';
   }
 
-  return category === 'Personalizadas' ? 'Muñecas Personalizadas' : category;
+  const normalizedCategory = categoryAliases[category] ?? category;
+
+  if (!categoryValues.has(normalizedCategory)) {
+    return 'all';
+  }
+
+  return normalizedCategory;
 }
 
 export default function Catalog() {
   const [searchParams] = useSearchParams();
-  const initCategory = normalizeInitialCategory(searchParams.get('categoria'));
-
-  const [activeCategory, setActiveCategory] = useState<string>(initCategory);
+  const categoryParam = searchParams.get('category') ?? searchParams.get('categoria');
+  const [activeCategory, setActiveCategory] = useState<string>(() =>
+    normalizeInitialCategory(categoryParam),
+  );
   const [sortOption, setSortOption] = useState<keyof typeof sortOptions>('novedad');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
-  const [filteredDolls, setFilteredDolls] = useState<Doll[]>(mockDolls);
+  const [filteredDolls, setFilteredDolls] = useState<Doll[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    setActiveCategory(normalizeInitialCategory(categoryParam));
+  }, [categoryParam]);
 
   useEffect(() => {
     let isMounted = true;
     const sort = sortOptions[sortOption];
 
     setIsLoading(true);
+    setError(null);
     getDolls({
       search: searchQuery || undefined,
-      category: activeCategory !== 'Todas' ? activeCategory : undefined,
+      category: activeCategory !== 'all' ? activeCategory : undefined,
       sortBy: sort.sortBy,
       order: sort.order,
       page: 1,
@@ -54,6 +81,12 @@ export default function Catalog() {
       .then((result) => {
         if (isMounted) {
           setFilteredDolls(result.data);
+        }
+      })
+      .catch(() => {
+        if (isMounted) {
+          setFilteredDolls([]);
+          setError('No pudimos cargar el catálogo. Verifica que el backend esté disponible.');
         }
       })
       .finally(() => {
@@ -92,7 +125,7 @@ export default function Catalog() {
           className="flex items-center gap-2 text-sm font-medium uppercase tracking-widest"
         >
           <SlidersHorizontal size={16} /> Filtros{' '}
-          {activeCategory !== 'Todas' && (
+          {activeCategory !== 'all' && (
             <span className="bg-black text-white w-2 h-2 rounded-full inline-block ml-1"></span>
           )}
         </button>
@@ -142,17 +175,17 @@ export default function Catalog() {
               <h3 className="text-xs font-semibold tracking-[0.1em] uppercase mb-4">Categorías</h3>
               <div className="space-y-3">
                 {categories.map((cat) => (
-                  <label key={cat} className="flex items-center gap-3 cursor-pointer group">
+                  <label key={cat.value} className="flex items-center gap-3 cursor-pointer group">
                     <input
                       type="radio"
                       name="category"
-                      value={cat}
-                      checked={activeCategory === cat}
-                      onChange={() => setActiveCategory(cat)}
+                      value={cat.value}
+                      checked={activeCategory === cat.value}
+                      onChange={() => setActiveCategory(cat.value)}
                       className="accent-black w-4 h-4"
                     />
                     <span className="text-sm text-neutral-600 group-hover:text-black transition-colors">
-                      {cat}
+                      {cat.label}
                     </span>
                   </label>
                 ))}
@@ -161,7 +194,7 @@ export default function Catalog() {
 
             <button
               onClick={() => {
-                setActiveCategory('Todas');
+                setActiveCategory('all');
                 setSortOption('novedad');
                 setSearchQuery('');
               }}
@@ -179,7 +212,15 @@ export default function Catalog() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-x-6 gap-y-12">
-            {filteredDolls.length > 0 ? (
+            {isLoading ? (
+              <div className="col-span-full py-20 text-center text-neutral-500">
+                <p className="text-lg">Cargando catálogo...</p>
+              </div>
+            ) : error ? (
+              <div className="col-span-full py-20 text-center text-neutral-500">
+                <p className="text-lg">{error}</p>
+              </div>
+            ) : filteredDolls.length > 0 ? (
               filteredDolls.map((doll) => <ProductCard key={doll.id} product={doll} />)
             ) : (
               <div className="col-span-full py-20 text-center text-neutral-500">

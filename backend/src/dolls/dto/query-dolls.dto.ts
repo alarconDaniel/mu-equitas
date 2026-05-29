@@ -4,6 +4,7 @@ import {
   IsBoolean,
   IsIn,
   IsInt,
+  IsNumber,
   IsOptional,
   IsString,
   Length,
@@ -11,9 +12,11 @@ import {
   Min,
 } from 'class-validator';
 
+export const PRODUCT_TYPES = ['doll', 'accessory', 'keychain'] as const;
 export const DOLL_SORT_FIELDS = ['price', 'createdAt', 'popularity', 'name'] as const;
 export const SORT_ORDERS = ['asc', 'desc'] as const;
 
+export type ProductType = (typeof PRODUCT_TYPES)[number];
 export type DollSortBy = (typeof DOLL_SORT_FIELDS)[number];
 export type SortOrder = (typeof SORT_ORDERS)[number];
 
@@ -34,23 +37,28 @@ function toOptionalBoolean(value: unknown) {
 }
 
 export class QueryDollsDto {
-  @ApiPropertyOptional({ example: 'amelia' })
+  @ApiPropertyOptional({ example: 'burnice' })
   @IsOptional()
   @IsString()
   @Length(1, 120)
   search?: string;
 
-  @ApiPropertyOptional({ example: 'personalizadas' })
+  @ApiPropertyOptional({ example: 'coleccion-premium' })
   @IsOptional()
   @IsString()
-  @Length(1, 120)
+  @Length(1, 140)
   category?: string;
 
-  @ApiPropertyOptional({ example: 'atelier' })
+  @ApiPropertyOptional({ example: 'winter-elegance' })
   @IsOptional()
   @IsString()
-  @Length(1, 120)
+  @Length(1, 140)
   collection?: string;
+
+  @ApiPropertyOptional({ enum: PRODUCT_TYPES, example: 'doll' })
+  @IsOptional()
+  @IsIn(PRODUCT_TYPES)
+  productType?: ProductType;
 
   @ApiPropertyOptional({ example: true })
   @IsOptional()
@@ -58,17 +66,23 @@ export class QueryDollsDto {
   @IsBoolean()
   available?: boolean;
 
+  @ApiPropertyOptional({ example: true })
+  @IsOptional()
+  @Transform(({ value }) => toOptionalBoolean(value))
+  @IsBoolean()
+  featured?: boolean;
+
   @ApiPropertyOptional({ example: 100000 })
   @IsOptional()
   @Type(() => Number)
-  @IsInt()
+  @IsNumber({ maxDecimalPlaces: 2 })
   @Min(0)
   minPrice?: number;
 
   @ApiPropertyOptional({ example: 220000 })
   @IsOptional()
   @Type(() => Number)
-  @IsInt()
+  @IsNumber({ maxDecimalPlaces: 2 })
   @Min(0)
   maxPrice?: number;
 

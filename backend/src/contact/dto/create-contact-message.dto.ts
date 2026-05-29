@@ -12,9 +12,9 @@ export class CreateContactMessageDto {
   @Length(5, 180)
   email: string;
 
-  @ApiProperty({ example: 'Consulta sobre una muñeca' })
+  @ApiProperty({ example: 'Consulta sobre una muneca' })
   @IsString()
-  @Length(4, 160)
+  @Length(4, 180)
   subject: string;
 
   @ApiProperty({ example: 'Hola, quisiera conocer disponibilidad y tiempos de entrega.' })

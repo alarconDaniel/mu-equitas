@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import configuration from './config/configuration';
 import { validate } from './config/env.validation';
 import { CategoriesModule } from './categories/categories.module';
+import { CombosModule } from './combos/combos.module';
 import { CollectionsModule } from './collections/collections.module';
 import { ContactModule } from './contact/contact.module';
 import { DatabaseModule } from './database/prisma.module';
@@ -20,6 +21,7 @@ import { NewsletterModule } from './newsletter/newsletter.module';
     DatabaseModule,
     HealthModule,
     DollsModule,
+    CombosModule,
     CategoriesModule,
     CollectionsModule,
     NewsletterModule,

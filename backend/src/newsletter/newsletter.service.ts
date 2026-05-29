@@ -13,6 +13,13 @@ export class NewsletterService {
     });
 
     if (existingSubscriber) {
+      if (!existingSubscriber.isActive) {
+        await this.prisma.newsletterSubscriber.update({
+          where: { email },
+          data: { isActive: true },
+        });
+      }
+
       return {
         subscribed: true,
         message: 'El correo ya estaba suscrito.',
@@ -20,7 +27,7 @@ export class NewsletterService {
     }
 
     await this.prisma.newsletterSubscriber.create({
-      data: { email },
+      data: { email, isActive: true },
     });
 
     return {

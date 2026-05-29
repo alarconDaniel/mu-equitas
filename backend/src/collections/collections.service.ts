@@ -1,8 +1,20 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { slugify } from '../common/utils/slugify';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from '../database/prisma.service';
-import { CreateCollectionDto } from './dto/create-collection.dto';
-import { UpdateCollectionDto } from './dto/update-collection.dto';
+
+const collectionDetailInclude = {
+  dolls: {
+    include: {
+      category: true,
+      collection: true,
+    },
+    orderBy: [{ isFeatured: 'desc' }, { popularity: 'desc' }, { createdAt: 'desc' }],
+  },
+} satisfies Prisma.CollectionInclude;
+
+type CollectionDetail = Prisma.CollectionGetPayload<{
+  include: typeof collectionDetailInclude;
+}>;
 
 @Injectable()
 export class CollectionsService {
@@ -10,56 +22,32 @@ export class CollectionsService {
 
   findAll() {
     return this.prisma.collection.findMany({
-      orderBy: { name: 'asc' },
+      where: { isActive: true },
+      orderBy: [{ displayOrder: 'asc' }, { name: 'asc' }],
       include: { _count: { select: { dolls: true } } },
     });
   }
 
   async findBySlug(slug: string) {
-    const collection = await this.prisma.collection.findUnique({
-      where: { slug },
-      include: {
-        dolls: {
-          include: {
-            category: true,
-            collection: true,
-          },
-          orderBy: { createdAt: 'desc' },
-        },
-      },
+    const collection = await this.prisma.collection.findFirst({
+      where: { slug, isActive: true },
+      include: collectionDetailInclude,
     });
 
     if (!collection) {
       throw new NotFoundException('La coleccion solicitada no existe.');
     }
 
-    return collection;
+    return this.serializeCollection(collection);
   }
 
-  create(createCollectionDto: CreateCollectionDto) {
-    const { slug, ...data } = createCollectionDto;
-
-    return this.prisma.collection.create({
-      data: {
-        ...data,
-        slug: slugify(slug ?? createCollectionDto.name),
-      },
-    });
-  }
-
-  update(id: string, updateCollectionDto: UpdateCollectionDto) {
-    const { slug, ...data } = updateCollectionDto;
-
-    return this.prisma.collection.update({
-      where: { id },
-      data: {
-        ...data,
-        slug: slug ? slugify(slug) : undefined,
-      },
-    });
-  }
-
-  remove(id: string) {
-    return this.prisma.collection.delete({ where: { id } });
+  private serializeCollection(collection: CollectionDetail) {
+    return {
+      ...collection,
+      dolls: collection.dolls.map((product) => ({
+        ...product,
+        price: Number(product.price),
+      })),
+    };
   }
 }

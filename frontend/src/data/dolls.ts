@@ -1,5 +1,6 @@
 export interface Doll {
   id: string;
+  code?: string | null;
   name: string;
   slug?: string;
   category: string;
@@ -9,10 +10,14 @@ export interface Doll {
   price: number;
   image: string;
   tag?: string | null;
+  productType?: 'doll' | 'accessory' | 'keychain';
+  stockQuantity?: number;
+  isFeatured?: boolean;
   description: string;
   available: boolean;
   popularity: number;
   createdAt: string;
+  updatedAt?: string;
 }
 
 export const dolls: Doll[] = [

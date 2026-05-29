@@ -1,30 +1,29 @@
-# Muñequitas Frontend
+# Munequitas Frontend
 
-Frontend de la tienda online Muñequitas, construido con React, Vite, TypeScript y Tailwind CSS.
+Frontend React + Vite. La interfaz visual aprobada se conserva; la conexion con backend se controla desde servicios en `src/services`.
 
-## Requisitos
-
-- Node.js 20 o superior
-- Backend disponible en `http://localhost:3001/api` para consumir el catalogo real
-
-## Configuracion
-
-1. Instala dependencias:
-   ```bash
-   npm install
-   ```
-2. Crea `.env.local` si necesitas cambiar la URL de la API:
-   ```bash
-   VITE_API_URL=http://localhost:3001/api
-   ```
-
-## Scripts
+## Variables
 
 ```bash
+VITE_API_URL=http://localhost:3001/api
+```
+
+En produccion, `VITE_API_URL` debe apuntar al backend publicado. No uses claves secretas en el frontend.
+
+## Desarrollo
+
+```bash
+npm install
 npm run dev
+```
+
+## Build
+
+```bash
 npm run build
-npm run preview
 npm run lint
 ```
 
-El catalogo consume el backend mediante `src/services`. Si la API no esta disponible durante desarrollo, la app usa los datos mock locales como fallback controlado para conservar la experiencia visual.
+## Imagenes
+
+Las imagenes publicas del catalogo estan preparadas en `public/images`. Las rutas deben coincidir con `image_url` en Supabase.

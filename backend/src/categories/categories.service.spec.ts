@@ -7,10 +7,7 @@ describe('CategoriesService', () => {
   let prisma: {
     category: {
       findMany: jest.Mock;
-      findUnique: jest.Mock;
-      create: jest.Mock;
-      update: jest.Mock;
-      delete: jest.Mock;
+      findFirst: jest.Mock;
     };
   };
 
@@ -18,32 +15,28 @@ describe('CategoriesService', () => {
     prisma = {
       category: {
         findMany: jest.fn(),
-        findUnique: jest.fn(),
-        create: jest.fn(),
-        update: jest.fn(),
-        delete: jest.fn(),
+        findFirst: jest.fn(),
       },
     };
 
     service = new CategoriesService(prisma as unknown as PrismaService);
   });
 
-  it('creates categories with normalized slugs', async () => {
-    prisma.category.create.mockResolvedValue({ id: 'category-1' });
+  it('lists only active categories ordered for catalog display', async () => {
+    prisma.category.findMany.mockResolvedValue([]);
 
-    await service.create({
-      name: 'Muñecas Clasicas',
-      description: 'Piezas atemporales para coleccionar.',
-      imageUrl: 'https://example.com/category.jpg',
-    });
+    await service.findAll();
 
-    expect(prisma.category.create).toHaveBeenCalledWith({
-      data: expect.objectContaining({ slug: 'munecas-clasicas' }),
-    });
+    expect(prisma.category.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: { isActive: true },
+        orderBy: [{ displayOrder: 'asc' }, { name: 'asc' }],
+      }),
+    );
   });
 
   it('throws NotFoundException when category slug is missing', async () => {
-    prisma.category.findUnique.mockResolvedValue(null);
+    prisma.category.findFirst.mockResolvedValue(null);
 
     await expect(service.findBySlug('no-existe')).rejects.toThrow(NotFoundException);
   });

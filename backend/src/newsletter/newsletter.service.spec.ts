@@ -7,6 +7,7 @@ describe('NewsletterService', () => {
     newsletterSubscriber: {
       findUnique: jest.Mock;
       create: jest.Mock;
+      update: jest.Mock;
     };
   };
 
@@ -15,6 +16,7 @@ describe('NewsletterService', () => {
       newsletterSubscriber: {
         findUnique: jest.fn(),
         create: jest.fn(),
+        update: jest.fn(),
       },
     };
 
@@ -29,12 +31,15 @@ describe('NewsletterService', () => {
 
     expect(result.subscribed).toBe(true);
     expect(prisma.newsletterSubscriber.create).toHaveBeenCalledWith({
-      data: { email: 'cliente@ejemplo.com' },
+      data: { email: 'cliente@ejemplo.com', isActive: true },
     });
   });
 
-  it('is idempotent for existing subscribers', async () => {
-    prisma.newsletterSubscriber.findUnique.mockResolvedValue({ id: 'subscriber-1' });
+  it('is idempotent for existing active subscribers', async () => {
+    prisma.newsletterSubscriber.findUnique.mockResolvedValue({
+      id: 'subscriber-1',
+      isActive: true,
+    });
 
     const result = await service.subscribe({ email: 'cliente@ejemplo.com' });
 
@@ -43,5 +48,20 @@ describe('NewsletterService', () => {
       message: 'El correo ya estaba suscrito.',
     });
     expect(prisma.newsletterSubscriber.create).not.toHaveBeenCalled();
+    expect(prisma.newsletterSubscriber.update).not.toHaveBeenCalled();
+  });
+
+  it('reactivates existing inactive subscribers', async () => {
+    prisma.newsletterSubscriber.findUnique.mockResolvedValue({
+      id: 'subscriber-1',
+      isActive: false,
+    });
+
+    await service.subscribe({ email: 'cliente@ejemplo.com' });
+
+    expect(prisma.newsletterSubscriber.update).toHaveBeenCalledWith({
+      where: { email: 'cliente@ejemplo.com' },
+      data: { isActive: true },
+    });
   });
 });

@@ -1,26 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import ProductCard from './ProductCard';
-import { dolls as mockDolls, type Doll } from '../data/dolls';
-import { getFeaturedDolls } from '../services/dollsService';
+import { dolls as mockDolls } from '../data/dolls';
 
 export default function FeaturedProducts() {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const [featured, setFeatured] = useState<Doll[]>(mockDolls.slice(0, 8));
-
-  useEffect(() => {
-    let isMounted = true;
-
-    getFeaturedDolls(8).then((dolls) => {
-      if (isMounted && dolls.length > 0) {
-        setFeatured(dolls);
-      }
-    });
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
+  const featured = mockDolls.slice(0, 8);
 
   const scrollLeft = () => {
     if (scrollRef.current) scrollRef.current.scrollBy({ left: -300, behavior: 'smooth' });

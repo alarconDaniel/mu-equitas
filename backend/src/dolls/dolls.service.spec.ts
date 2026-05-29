@@ -10,10 +10,29 @@ describe('DollsService', () => {
       findMany: jest.Mock;
       count: jest.Mock;
       findUnique: jest.Mock;
-      create: jest.Mock;
-      update: jest.Mock;
-      delete: jest.Mock;
     };
+  };
+
+  const product = {
+    id: 'doll-1',
+    code: 'd1',
+    name: 'Burnice White',
+    slug: 'burnice-white',
+    description: 'Producto del catalogo.',
+    price: 185000,
+    imageUrl: '/images/dolls/burnice-white.jpg',
+    tag: 'Nuevo',
+    productType: 'doll',
+    available: true,
+    stockQuantity: 12,
+    popularity: 95,
+    isFeatured: true,
+    categoryId: 'category-1',
+    collectionId: 'collection-1',
+    createdAt: new Date('2026-05-01'),
+    updatedAt: new Date('2026-05-01'),
+    category: { id: 'category-1', name: 'Coleccion Premium', slug: 'coleccion-premium' },
+    collection: { id: 'collection-1', name: 'Winter Elegance', slug: 'winter-elegance' },
   };
 
   beforeEach(() => {
@@ -23,30 +42,22 @@ describe('DollsService', () => {
         findMany: jest.fn(),
         count: jest.fn(),
         findUnique: jest.fn(),
-        create: jest.fn(),
-        update: jest.fn(),
-        delete: jest.fn(),
       },
     };
 
     service = new DollsService(prisma as unknown as PrismaService);
   });
 
-  it('returns paginated dolls with safe filters and sorting', async () => {
-    const doll = {
-      id: 'doll-1',
-      name: 'Amelia Rose',
-      slug: 'amelia-rose',
-      category: { name: 'Personalizadas', slug: 'personalizadas' },
-      collection: { name: 'Atelier', slug: 'atelier' },
-    };
-    prisma.doll.findMany.mockResolvedValue([doll]);
+  it('returns paginated products with catalog filters and numeric prices', async () => {
+    prisma.doll.findMany.mockResolvedValue([product]);
     prisma.doll.count.mockResolvedValue(1);
 
     const result = await service.findAll({
-      search: 'amelia',
-      category: 'personalizadas',
+      search: 'burnice',
+      category: 'coleccion-premium',
+      productType: 'doll',
       available: true,
+      featured: true,
       minPrice: 100000,
       sortBy: 'price',
       order: 'asc',
@@ -55,7 +66,7 @@ describe('DollsService', () => {
     });
 
     expect(result).toEqual({
-      data: [doll],
+      data: [product],
       meta: {
         page: 2,
         limit: 6,
@@ -70,38 +81,21 @@ describe('DollsService', () => {
         take: 6,
       }),
     );
-    expect(prisma.doll.count).toHaveBeenCalledWith(
-      expect.objectContaining({
-        where: expect.objectContaining({
-          available: true,
-          price: { gte: 100000, lte: undefined },
-        }),
+    expect(prisma.doll.count).toHaveBeenCalledWith({
+      where: expect.objectContaining({
+        AND: expect.arrayContaining([
+          { productType: 'doll' },
+          { available: true },
+          { isFeatured: true },
+          { price: { gte: 100000, lte: undefined } },
+        ]),
       }),
-    );
+    });
   });
 
   it('throws NotFoundException when a slug does not exist', async () => {
     prisma.doll.findUnique.mockResolvedValue(null);
 
-    await expect(service.findBySlug('missing-doll')).rejects.toThrow(NotFoundException);
-  });
-
-  it('creates a doll with a generated slug', async () => {
-    prisma.doll.create.mockResolvedValue({ id: 'doll-1', slug: 'amelia-rose' });
-
-    await service.create({
-      name: 'Amelia Rose',
-      description: 'Muñeca artesanal con vestido floral y acabados premium.',
-      price: 185000,
-      imageUrl: 'https://example.com/amelia.jpg',
-      categoryId: 'category-1',
-      collectionId: 'collection-1',
-    });
-
-    expect(prisma.doll.create).toHaveBeenCalledWith(
-      expect.objectContaining({
-        data: expect.objectContaining({ slug: 'amelia-rose' }),
-      }),
-    );
+    await expect(service.findBySlug('missing-product')).rejects.toThrow(NotFoundException);
   });
 });

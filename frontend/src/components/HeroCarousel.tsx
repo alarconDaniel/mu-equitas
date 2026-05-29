@@ -14,9 +14,9 @@ const slides = [
   },
   {
     image: 'https://images.unsplash.com/photo-1588636733221-da3b7b250de8?auto=format&fit=crop&q=80&w=2000',
-    title: 'PERSONALIZA TU MUÑECA',
+    title: 'CON LA MAYOR ATENCIÓN AL DETALLE',
     subtitle: 'Diseños especiales pensados para contar historias únicas.',
-    buttonText: 'Crear la mía',
+    buttonText: 'Descubre',
     link: '/catalogo',
     overlay: 'bg-black/40' // slightly darker to make white text pop
   },
